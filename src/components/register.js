@@ -2,21 +2,39 @@ import React from 'react'
 import axios from 'axios'
 
 export default class Register extends React.Component {
-    state = {
-        username  : '',
-        firstname : '',
-        lastname  : '',
-        password  : ''
+    constructor(props){
+        super(props);
+        this.state = {
+            username  : '',
+            firstname : '',
+            lastname  : '',
+            password  : ''
+        };
+
+        this.onChange = this.onChange.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
-    handleChange(event) {
-        this.setState({name: event.target.value})
+    onChange(event) {
+        this.setState({[event.target.name]: event.target.value });
     }
 
-    handleSubmit(event) {
+    onSubmit(event) {
         event.preventDefault();
-   
-        axios.post(`http://192.168.100.6:7070/register`, {user})
+
+        const post = {
+            username: this.state.username,
+            firstname: this.state.firstname,
+            lastname: this.state.lastname,
+            password: this.state.password
+        }
+
+        axios.post(`http://192.168.100.4:7070/register`, {
+            username: post.username,
+            firstname: post.firstname,
+            lastname: post.lastname,
+            password: post.password
+        })
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -24,22 +42,48 @@ export default class Register extends React.Component {
     }
 
     render() {
-        
-        const 
-            {username,
-            firstname, 
-            lastname, 
-            password,} = user
-
         return (
-            <form onSubmit={this.handleSubmit}>
-                <label>
-                    Username :
-                    <input type="text" name="username" />
-                </label>
-                <button type="submit" onClick={this.handleChange}>Register</button>
-            </form>
-        )
-        
+          <form onSubmit={this.onSubmit}>
+            <label>
+              Username :
+              <input
+                type="text"
+                name="username"
+                onChange={this.onChange}
+                value={this.state.username}
+              />
+            </label>
+            <label>
+              First Name :
+              <input
+                type="text"
+                name="firstname"
+                onChange={this.onChange}
+                value={this.state.firstname}
+              />
+            </label>
+            <label>
+              Last Name :
+              <input
+                type="text"
+                name="lastname"
+                onChange={this.onChange}
+                value={this.state.lastname}
+              />
+            </label>
+            <label>
+              Password :
+              <input
+                type="text"
+                name="password"
+                onChange={this.onChange}
+                value={this.state.password}
+              />
+            </label>
+            <button type="submit">
+              Register
+            </button>
+          </form>
+        )        
     }
 }
